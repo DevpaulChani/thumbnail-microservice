@@ -27,9 +27,6 @@ jobs:
         with:
           terraform_version: 1.9.8
 
-      - name: Create placeholder deployment package
-        run: touch deployment-package.zip
-
       - name: Terraform Init
         working-directory: terraform
         run: terraform init
