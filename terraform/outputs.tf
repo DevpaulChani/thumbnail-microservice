@@ -12,3 +12,13 @@ output "cloudwatch_log_group" {
   description = "CloudWatch log group for Lambda"
   value       = aws_cloudwatch_log_group.lambda_logs.name
 }
+
+output "sqs_queue_url" {
+  description = "URL of the thumbnail-complete SQS queue"
+  value       = aws_sqs_queue.thumbnail_complete.url
+}
+
+output "sqs_queue_arn" {
+  description = "ARN of the thumbnail-complete SQS queue"
+  value       = aws_sqs_queue.thumbnail_complete.arn
+}

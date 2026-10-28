@@ -62,6 +62,13 @@ resource "aws_iam_role_policy" "lambda_s3_policy" {
           "logs:PutLogEvents"
         ]
         Resource = "arn:aws:logs:*:*:*"
+      },
+      {
+        Effect = "Allow"
+        Action = [
+          "sqs:SendMessage"
+        ]
+        Resource = aws_sqs_queue.thumbnail_complete.arn
       }
     ]
   })
@@ -75,6 +82,12 @@ resource "aws_cloudwatch_log_group" "lambda_logs" {
   tags = {
     Name = "rock-of-ages-thumbnail-lambda-logs"
   }
+}
+
+# SQS Queue - notifies subscribers when thumbnails are created
+resource "aws_sqs_queue" "thumbnail_complete" {
+  name                      = "thumbnail-complete"
+  message_retention_seconds = 86400 # 1 day
 }
 
 # Lambda Function
@@ -93,6 +106,7 @@ resource "aws_lambda_function" "thumbnail_generator" {
   environment {
     variables = {
       THUMBNAIL_SIZES = "small,medium,large"
+      SQS_QUEUE_URL   = aws_sqs_queue.thumbnail_complete.url
     }
   }
 
